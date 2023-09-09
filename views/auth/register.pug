@@ -1,1 +1,20 @@
-h2 Registrate
+extends ../layout/index.pug
+
+block content
+    div(class="py-10")
+        h1(class="text-center text-4xl font-bold my-10") Bienes
+            span(class="font-normal") Raices
+        h2(class="text-center text-2xl font-bold")= title
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow rounded-lg")
+                form(action="")
+                    div(class="flex flex-col gap-3")
+                        //- label(class="block text-gray-500 text-sm font-bold mb-2 uppercase" for="nombre") Nombre
+                        input(class="w-full px-5 py-3 border border-gray-300 rounded-lg" type="text" id="name" placeholder="Nombre")
+                        input(class="w-full px-5 py-3 border border-gray-300 rounded-lg" type="email" id="email" placeholder="Correo electrónico")
+                        input(class="w-full px-5 py-3 border border-gray-300 rounded-lg" type="password" id="password" placeholder="Contraseña")
+                        input(class="w-full px-5 py-3 border border-gray-300 rounded-lg" type="password" id="rpassword" placeholder="Confirmar contraseña")
+                        div(class="flex justify-between")
+                            a(class="text-sm text-gray-600 hover:text-gray-400 hover:cursor-pointer hover:underline" href="/auth/login") ¿Ya tienes una cuenta?
+                        input(class="text-white font-bold py-2 w-full bg-blue-700 hover:bg-blue-600 rounded-lg hover:cursor-pointer" type="submit" value="Crear cuenta")
