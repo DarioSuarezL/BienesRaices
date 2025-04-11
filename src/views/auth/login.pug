@@ -1,0 +1,25 @@
+extends ../layouts/index.pug
+
+block content
+    div(class="py-10")
+        h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+            span(class="font-normal") Raices
+        h2(class='text-center text-2xl font-extrabold')=title
+
+        div(class="mt-8 mx-auto max-w-md")
+            div(class="bg-white py-8 px-4 shadow")
+                form(action="" class="space-y-5")
+                    div
+                        label(class="block text-sm text-gray-500 mb-2 font-bold" for="email") Correo Electrónico
+                        input(id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Ingresa tu correo" type="email")
+                    
+                    div
+                        label(class="block text-sm text-gray-500 mb-2 font-bold" for="password") Contraseña
+                        input(id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Ingresa tu contraseña" type="password")
+                    
+                    input(class="block w-full bg-gray-700 text-white p-2 rounded-md hover:bg-gray-600 font-bold cursor-pointer" type="submit" value="Iniciar sesión")
+
+                div(class="flex justify-between")
+                    a(class="block text-center text-sm mt-5 text-gray-500 hover:text-gray-700 font-bold" href="/auth/register") Crear cuenta
+
+                    a(class="block text-center text-sm mt-5 text-gray-500 hover:text-gray-700 font-bold" href="/auth/forgot-password") Olvidé mi contraseña

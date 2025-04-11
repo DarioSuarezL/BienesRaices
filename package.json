@@ -1,0 +1,33 @@
+{
+  "name": "bienesraices",
+  "version": "1.0.0",
+  "description": "Expressjs, Tailwind, MCV",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./server.js",
+    "css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/output.css --watch"
+  },
+  "keywords": [
+    "MVC",
+    "pug",
+    "Express"
+  ],
+  "author": "dsuarezlazarte@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.3",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.7",
+    "tailwindcss": "^4.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
