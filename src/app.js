@@ -1,7 +1,10 @@
 import express from 'express'
+import csrf from 'csurf'
+import cookieParser from 'cookie-parser'
 
+import './config/env.js'
 import routes from './routes/index.js'
-import { sequelize, env } from './config/index.js'
+import sequelize from './config/db.js'
 
 // Crea la app de express
 const app = express()
@@ -18,6 +21,8 @@ try {
 
 // Habilita el uso de formularios
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(csrf({ cookie: true }))
 app.use(express.json())
 
 
