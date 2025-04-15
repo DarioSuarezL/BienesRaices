@@ -1,4 +1,3 @@
-
 import { createUser, confirmUser, generatePasswordToken, userByToken, updatePassword } from '../services/auth.service.js'
 
 
@@ -66,8 +65,8 @@ const forgotPasswordPage = (req, res) => {
     })
 }
 
-const resetPassword = async (req, res) => {
-    const user = await generatePasswordToken(req.body.email)
+const forgotPassword = async (req, res) => {
+    await generatePasswordToken(req.body.email)
     return res.render('auth/confirm-email', {
         title: 'Reestablece tu contraseña',
         msg: 'Sigue los pasos del correo que te hemos enviado para reestablecer tu contraseña.',
@@ -75,32 +74,44 @@ const resetPassword = async (req, res) => {
 }
 
 const checkToken = async (req, res) => {
-    const { token } = req.params
-    const user = await userByToken(token)
-    if (!user) {
+    try {
+        const { token } = req.params
+        const user = await userByToken(token)
+        if (!user) {
+            return res.render('auth/confirm-email', {
+                title: 'Error al reestablecer tu contraseña',
+                msg: 'Token no válido o expirado, si crees que se trata de un error, contáctanos.',
+            })
+        }
+    
+        return res.render('auth/reset-password', {
+            title: 'Reestablece tu contraseña',
+            csrfToken: req.csrfToken(),
+        })
+    } catch (error) {
         return res.render('auth/confirm-email', {
             title: 'Error al reestablecer tu contraseña',
             msg: 'Token no válido o expirado, si crees que se trata de un error, contáctanos.',
         })
     }
-
-    return res.render('auth/reset-password', {
-        title: 'Reestablece tu contraseña',
-        csrfToken: req.csrfToken(),
-        // token,
-    })
-
 }
 
-const newPassword = async (req, res) => {
-    const { token } = req.params
-    const { password } = req.body
-    await updatePassword(token, password)
-
-    return res.render('auth/confirm-email', {
-        title: 'Reestablece tu contraseña',
-        msg: 'Tu contraseña ha sido reestablecida, ya puedes iniciar sesión.',
-    })
+const resetPassword = async (req, res) => {
+    try{
+        const { token } = req.params
+        const { password } = req.body
+        await updatePassword(token, password)
+        return res.render('auth/confirm-email', {
+            title: 'Reestablece tu contraseña',
+            msg: 'Tu contraseña ha sido reestablecida, ya puedes iniciar sesión.',
+        })
+    }catch(error) {
+        return res.render('auth/reset-password', {
+            title: 'Reestablece tu contraseña',
+            errors: [{msg:'¡UPS! Algo salió mal.'}, { msg: error }],
+            csrfToken: req.csrfToken(),
+        })
+    }
 
 }
 
@@ -110,7 +121,7 @@ export {
     register,
     confirmEmail,
     forgotPasswordPage,
-    resetPassword,
+    forgotPassword,
     checkToken,
-    newPassword
+    resetPassword
 }
