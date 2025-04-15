@@ -5,28 +5,7 @@ import sequelize from '../config/db.js';
 import { generateToken } from '../helpers/tokens.js';
 
 class User extends Model {
-    static async findByEmail(email) {
-        return await User.findOne({ where: { email } });
-    }
 
-    
-    static async findById(id) {
-        return await User.findOne({ where: { id } });
-    }
-    
-    // static async findByToken(token) {
-    //     return await User.findOne({ where: { token } });
-    // }
-
-    // static async confirmUser(token){
-    //     await User.update({ confirmed: true, token: null }, { where: { token } });
-    // }
-
-    static async tryConfirmUser(token){ //Nos evitamos una doble llamada a la DB
-        const user = await User.findOne({ where: { token } });
-        if (user) user.update({ confirmed: true, token: null });
-        return user;
-    }
 }
 
 User.init({
@@ -51,7 +30,11 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    token: DataTypes.STRING,
+    token: {
+        type: DataTypes.STRING,
+        defaultValue: generateToken(),
+        allowNull: true, 
+    },
     confirmed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
@@ -67,7 +50,6 @@ User.init({
         beforeCreate: async (user) => {
             const salt = await bcrypt.genSaltSync(10);
             user.password = await bcrypt.hash(user.password, salt);
-            user.token = generateToken();
         }
     }
 })

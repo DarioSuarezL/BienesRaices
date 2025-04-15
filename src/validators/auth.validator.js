@@ -1,6 +1,6 @@
 import { body, validationResult } from 'express-validator'
 
-import User from '../models/user.model.js'
+import { userByEmail } from '../services/auth.service.js';
 
 const validateRegister = [
     body('name')
@@ -14,7 +14,7 @@ const validateRegister = [
         .isEmail()
         .withMessage('El correo eléctronico no es válido.')
         .custom(async (value) => {
-            const user = await User.findByEmail(value)
+            const user = await userByEmail(value)
             if (user) throw new Error('El correo eléctronico ya está en uso.');
         }),
     body('password')
@@ -27,13 +27,13 @@ const validateRegister = [
         .withMessage('La confirmación de la contraseña es obligatoria.')
         .custom((value, { req }) => {
             return value === req.body.password;
-          })
+        })
         .withMessage('Las contraseñas no coinciden.'),
 
     (req, res, next) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            res.render('auth/register', {
+            return res.render('auth/register', {
                 title: 'Crea tu cuenta',
                 errors: errors.array(),
                 old: {
@@ -48,7 +48,54 @@ const validateRegister = [
 
 ]
 
+const validateForgotPassword = [
+    body('email')
+        .notEmpty()
+        .withMessage('El correo eléctronico es obligatorio.')
+        .isEmail()
+        .withMessage('El correo eléctronico no es válido.')
+        .custom(async (value) => {
+            const user = await userByEmail(value)
+            if (!user) throw new Error('No hay cuentas con este correo.');
+        }),
+
+    (req, res, next) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.render('auth/forgot-password', {
+                title: 'Recupera tu contraseña',
+                errors: errors.array(),
+                csrfToken: req.csrfToken(),
+            })
+        }
+        next()
+    }
+]
+
+const validateResetPassword = [
+    body('password')
+        .notEmpty()
+        .withMessage('La contraseña es obligatoria.')
+        .isLength({ min: 6 })
+        .withMessage('La contraseña debe tener al menos 6 caracteres.'),
+    
+    (req, res, next) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.render('auth/reset-password', {
+                title: 'Recupera tu contraseña',
+                errors: errors.array(),
+                csrfToken: req.csrfToken(),
+            })
+        }
+        next()
+    }
+
+
+]
 
 export {
-    validateRegister
+    validateRegister,
+    validateForgotPassword,
+    validateResetPassword
 }
