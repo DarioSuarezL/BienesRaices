@@ -5,7 +5,7 @@ import sequelize from '../config/db.js';
 import { generateToken } from '../helpers/tokens.js';
 
 class User extends Model {
-
+    
 }
 
 User.init({

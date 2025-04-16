@@ -4,8 +4,12 @@ html(lang="es")
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet", href="/css/output.css")
-        title BienesRaices | #{title}
-    body(class="min-h-screen bg-gray-50")
+        title BienesRaices | #{page}
+        block styles
+    body(class="min-h-screen bg-gray-200")
+        include ../components/header.pug 
 
         main(class="mx-auto container mt-10 px-2")
             block content
+
+        block scripts

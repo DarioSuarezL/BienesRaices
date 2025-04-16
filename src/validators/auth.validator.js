@@ -2,6 +2,37 @@ import { body, validationResult } from 'express-validator'
 
 import { userByEmail } from '../services/auth.service.js';
 
+const validateLogin =[
+    body('email')
+        .notEmpty()
+        .withMessage('El correo eléctronico es obligatorio.')
+        .isEmail()
+        .withMessage('El correo eléctronico no es válido.')
+        .custom(async (value) => {
+            const user = await userByEmail(value)
+            if (!user) throw new Error('No hay cuentas con este correo.');
+            if (!user.confirmed) throw new Error('El correo eléctronico no ha sido confirmado.');
+        }),
+    body('password')
+        .notEmpty()
+        .withMessage('La contraseña es obligatoria.'),
+    
+    (req, res, next) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.render('auth/login', {
+                page: 'Inicia sesión',
+                errors: errors.array(),
+                old: {
+                    email: req.body.email,
+                },
+                csrfToken: req.csrfToken(),
+            })
+        }
+        next()
+    }
+]
+
 const validateRegister = [
     body('name')
         .notEmpty()
@@ -34,7 +65,7 @@ const validateRegister = [
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.render('auth/register', {
-                title: 'Crea tu cuenta',
+                page: 'Crea tu cuenta',
                 errors: errors.array(),
                 old: {
                     name: req.body.name,
@@ -63,7 +94,7 @@ const validateForgotPassword = [
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.render('auth/forgot-password', {
-                title: 'Recupera tu contraseña',
+                page: 'Recupera tu contraseña',
                 errors: errors.array(),
                 csrfToken: req.csrfToken(),
             })
@@ -83,7 +114,7 @@ const validateResetPassword = [
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.render('auth/reset-password', {
-                title: 'Recupera tu contraseña',
+                page: 'Recupera tu contraseña',
                 errors: errors.array(),
                 csrfToken: req.csrfToken(),
             })
@@ -95,6 +126,7 @@ const validateResetPassword = [
 ]
 
 export {
+    validateLogin,
     validateRegister,
     validateForgotPassword,
     validateResetPassword

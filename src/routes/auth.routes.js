@@ -1,11 +1,13 @@
 import { Router } from 'express'
 
-import { loginPage, registerPage, register, confirmEmail, forgotPasswordPage, forgotPassword, checkToken, resetPassword } from '../controllers/auth.controller.js'
-import { validateRegister, validateForgotPassword, validateResetPassword } from '../validators/auth.validator.js'
+import { loginPage, login, registerPage, register, confirmEmail, forgotPasswordPage, forgotPassword, checkToken, resetPassword } from '../controllers/auth.controller.js'
+import { validateLogin, validateRegister, validateForgotPassword, validateResetPassword } from '../validators/auth.validator.js'
 
 const router = Router()
 
 router.get('/login', loginPage)
+router.post('/login', validateLogin, login)
+
 router.get('/register', registerPage)
 router.post('/register', validateRegister, register)
 router.get('/confirm-email/:token', confirmEmail)
